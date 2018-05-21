@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="unnamed">
+    <output-path>$PROJECT_DIR$/out/artifacts/unnamed</output-path>
+    <root id="archive" name="unnamed.jar">
+      <element id="file-copy" path="D:/Pobieranie/TNoodle-WCA-0.13.3.jar" />
+    </root>
+  </artifact>
+</component>

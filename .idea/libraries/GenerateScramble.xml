@@ -1,0 +1,9 @@
+<component name="libraryTable">
+  <library name="GenerateScramble">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/../GenerateScramble/out/artifacts/GenerateScramble_jar/GenerateScramble.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>
