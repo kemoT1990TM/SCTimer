@@ -110,7 +110,9 @@ public class Controller {
         updateLabel(analyzerLabel1, String.valueOf(timesList.getSize()));
         if (timesList.getSize() > 0) {
             updateLabel(analyzerLabel2, timesList.minTime());
+            System.out.println(timesList.minTime());
             updateLabel(analyzerLabel3, timesList.maxTime());
+            System.out.println(timesList.maxTime());
         } else {
             updateLabel(analyzerLabel2, "");
             updateLabel(analyzerLabel3, "");
@@ -151,19 +153,19 @@ public class Controller {
 
     @FXML
     private void plusTwoButtonAction() {
-        timesList.plusTwo();
+//        timesList.plusTwo();
         timesArea.setText(timesList.printTimes());
         updateAnalyzer();
     }
 
     @FXML
     private void startStopTimer() {
-        Double time;
+        String time;
         if (running) {
             timer.stop();
             startStopButton.setText("START");
             scrambleLabel.setText(generateScramble());
-            time = Double.parseDouble(timerLabel.getText());
+            time = timerLabel.getText();
             timesList.addTime(time);
             timesArea.setText(timesList.printTimes());
             updateAnalyzer();

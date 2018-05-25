@@ -39,8 +39,7 @@
                     <Button fx:id="deleteButton" prefWidth="100" text="Delete" alignment="CENTER" BorderPane.alignment="CENTER"
                             onAction="#deleteButtonAction"/>
                     <!--<Label prefWidth="100"/>-->
-                    <Button fx:id="plusTwoButton" prefWidth="100" text="+2" alignment="CENTER" BorderPane.alignment="CENTER"
-                    onAction="#plusTwoButtonAction"/>
+                    <Button fx:id="plusTwoButton" prefWidth="100" text="+2" alignment="CENTER" BorderPane.alignment="CENTER"/>
                     <!--<Button fx:id="dnfButton" prefWidth="90" text="DNF" alignment="CENTER" BorderPane.alignment="CENTER"/>-->
                 </HBox>
                 <Label/>
