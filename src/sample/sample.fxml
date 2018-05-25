@@ -8,25 +8,19 @@
 
 <GridPane alignment="CENTER" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8.0.121"
           fx:controller="sample.Controller">
-    <Label fx:id="scrambleLabel" GridPane.halignment="CENTER" contentDisplay="CENTER"
-           textAlignment="CENTER" GridPane.columnIndex="0" GridPane.columnSpan="3" GridPane.rowIndex="0">
-        <font>
-            <Font name="Calibri bold" size="20" />
-        </font>
-    </Label>
         <Label fx:id="timerLabel" text="0.0" GridPane.halignment="CENTER" contentDisplay="CENTER"
-               textAlignment="CENTER" GridPane.columnIndex="0" GridPane.columnSpan="3" GridPane.rowIndex="1">
+               textAlignment="CENTER" GridPane.columnIndex="0" GridPane.columnSpan="3" GridPane.rowIndex="0">
             <font>
                 <Font name="Calibri bold" size="70" />
             </font>
         </Label>
-    <Label GridPane.rowIndex="2" GridPane.columnIndex="1"/>
-        <!--<HBox  GridPane.columnIndex="0" GridPane.columnSpan="3" GridPane.rowIndex="3" GridPane.halignment="CENTER">-->
-            <!--<Button prefWidth="90" text="Delete" />-->
-            <!--<Button prefWidth="90" text="+2" />-->
-            <!--<Button prefWidth="90" text="DNF" />-->
-        <!--</HBox>-->
+    <Label GridPane.rowIndex="1" GridPane.columnIndex=
+        <HBox GridPane.columnIndex="0" GridPane.rowIndex="2">
+            <Button prefWidth="90" text="Delete" />
+            <Button prefWidth="90" text="+2" />
+            <Button prefWidth="90" text="DNF" />
+        </HBox>
         <Button fx:id="startStopButton" prefHeight="25.0" prefWidth="268.0" text="START" GridPane.columnIndex="0"
-                GridPane.columnSpan="3" GridPane.rowIndex="4" GridPane.halignment="CENTER" onAction="#startStopTimer"/>
+                GridPane.columnSpan="3" GridPane.rowIndex="3" onAction="#startStopTimer"/>
 
 </GridPane>

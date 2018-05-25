@@ -19,7 +19,7 @@ public class Analyzer {
         StringBuilder sb=new StringBuilder();
         for(Double time:timesList){
             sb.append(time);
-            sb.append(", ");
+            sb.append(". ");
         }
         return sb.toString();
     }
@@ -105,6 +105,28 @@ public class Analyzer {
         return String.format("%.2f",sum/98);
     }
 
+    public List<Double> deleteLastTime(){
+        if(timesList.size()>0) {
+            timesList.remove(timesList.size() - 1);
+            return timesList;
+        } else {
+            return timesList;
+        }
+    }
+
+    public List<Double> plusTwo(){
+        double lastTime;
+        if(timesList.size()>0) {
+            lastTime=timesList.get(timesList.size() - 1);
+            timesList.remove(timesList.size() - 1);
+            lastTime+=0.2;
+            timesList.add(lastTime);
+            return timesList;
+        } else {
+            return timesList;
+        }
+
+    }
 
    //    public Analyzer(String name, String path) {
 //        this.sciezka = FileSystems.getDefault().getPath(path, name);

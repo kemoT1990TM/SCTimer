@@ -1,6 +1,5 @@
 package sample;
 
-import com.tkartas.generatescramble.GenerateScramble;
 import javafx.animation.AnimationTimer;
 import javafx.application.Platform;
 import javafx.event.EventHandler;
@@ -18,19 +17,18 @@ public class Controller {
     private Label timerLabel;
     @FXML
     private Button startStopButton;
-    @FXML
-    private Label scrambleLabel;
-
     private boolean running=false;
 
     private AnimationTimer timer = new AnimationTimer() {
         private long startTime;
         private double time = 0;
+        private int minutes = 0;
 
         @Override
         public void start() {
             super.start();
             startTime = System.currentTimeMillis();
+            minutes = 0;
             running=true;
         }
 
@@ -62,38 +60,30 @@ public class Controller {
 //    @FXML
 //    private void handleKeyPressed(KeyEvent event) {
 //        System.out.println(event.getCode());
-//        if (event.getCode().equals(KeyCode.SPACE) && running==true) {
+//        if (event.getCode() == KeyCode.SHIFT && running==true) {
 //            timer.stop();
 //            startStopButton.setText("START");
+//            running=false;
 //        }
 //    }
 //    @FXML
 //    private void handleKeyReleased(KeyEvent event) {
 //        System.out.println(event.getCode());
-//        if (event.getCode().equals(KeyCode.SPACE) && running==false) {
+//        if (event.getCode() == KeyCode.SHIFT && running==false) {
 //            timer.start();
 //            startStopButton.setText("STOP");
 //        }
 //    }
-    @FXML
-    private void initialize(){
-        scrambleLabel.setText(generateScramble());
-    }
-
-    private String generateScramble(){
-        GenerateScramble scramble=new GenerateScramble(25);
-        return scramble.getScramble();
-    }
 
     @FXML
   private void startStopTimer(){
         if(running){
             timer.stop();
             startStopButton.setText("START");
-            scrambleLabel.setText(generateScramble());
         } else{
             timer.start();
             startStopButton.setText("STOP");
         }
     }
+
 }
