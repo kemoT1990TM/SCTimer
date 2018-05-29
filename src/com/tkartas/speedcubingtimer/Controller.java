@@ -69,26 +69,30 @@ public class Controller {
         }
     };
 
-//    @FXML
-//    private void handleKeyPressed(KeyEvent event) {
-//        System.out.println(event.getCode());
-//        if (event.getCode().equals(KeyCode.SPACE) && running==true) {
+    @FXML
+    private void handleKeyPressed(KeyEvent event) {
+        System.out.println(event.getCode());
+//        if (event.getCode().equals(KeyCode.SPACE)) {
 //            timer.stop();
 //            startStopButton.setText("START");
 //        }
-//    }
-//    @FXML
-//    private void handleKeyReleased(KeyEvent event) {
-//        System.out.println(event.getCode());
-//        if (event.getCode().equals(KeyCode.SPACE) && running==false) {
+    }
+    @FXML
+    private void handleKeyReleased(KeyEvent event) {
+        System.out.println(event.getCode());
+//        if (event.getCode().equals(KeyCode.SPACE) {
 //            timer.start();
 //            startStopButton.setText("STOP");
 //        }
-//    }
+    }
 
     @FXML
     private void initialize() {
         scrambleLabel.setText(generateScramble());
+        plusTwoButton.setDisable(true);
+        deleteButton.setDisable(true);
+//        startStopButton.setDisable(true);
+//        timesArea.setDisable(true);
     }
 
     private String generateScramble() {
@@ -153,7 +157,7 @@ public class Controller {
 
     @FXML
     private void plusTwoButtonAction() {
-//        timesList.plusTwo();
+        timesList.plusTwo();
         timesArea.setText(timesList.printTimes());
         updateAnalyzer();
     }
@@ -169,6 +173,8 @@ public class Controller {
             timesList.addTime(time);
             timesArea.setText(timesList.printTimes());
             updateAnalyzer();
+            plusTwoButton.setDisable(false);
+            deleteButton.setDisable(false);
 
         } else {
             timer.start();

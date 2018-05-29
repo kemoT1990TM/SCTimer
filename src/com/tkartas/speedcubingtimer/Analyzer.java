@@ -65,18 +65,14 @@ public class Analyzer {
 
     private String convertToDateFormat(long timeInMillis){
         DateFormat df = new SimpleDateFormat("s.SS");
-        long timeDev = timeInMillis / 1000;
+        double timeDev = (timeInMillis/1000)+3600;
         if (timeDev >= 10 && timeDev < 60) {
             df = new SimpleDateFormat("ss.SS");
-            System.out.println(timeDev);
         } else if (timeDev >= 60 && timeDev < 600) {
-            System.out.println(timeDev);
             df = new SimpleDateFormat("m:ss.SS");
         } else if (timeDev >= 600 && timeDev < 3600) {
-            System.out.println(timeDev);
             df = new SimpleDateFormat("mm:ss.SS");
-        } else if (timeDev > 3600) {
-            System.out.println(timeDev);
+        } else if(timeDev > 3600) {
             df = new SimpleDateFormat("HH:mm:ss.SS");
         }
         return df.format(timeInMillis);
@@ -185,19 +181,19 @@ public class Analyzer {
         }
     }
 
-//    public List<Long> plusTwo(){
-//        double lastTime;
-//        if(timesList.size()>0) {
-//            lastTime=timesList.get(timesList.size() - 1);
-//            timesList.remove(timesList.size() - 1);
-//            lastTime+=0.2;
-//            timesList.add(lastTime);
-//            return timesList;
-//        } else {
-//            return timesList;
-//        }
-//
-//    }
+    public List<String> plusTwo(){
+        Long lastTime;
+        if(timesList.size()>0) {
+            lastTime=convertStringToMillis(timesList.get(timesList.size() - 1));
+            timesList.remove(timesList.size() - 1);
+            lastTime+=2000;
+            timesList.add(convertToDateFormat(lastTime));
+            return timesList;
+        } else {
+            return timesList;
+        }
+
+    }
 
    //    public Analyzer(String name, String path) {
 //        this.sciezka = FileSystems.getDefault().getPath(path, name);
