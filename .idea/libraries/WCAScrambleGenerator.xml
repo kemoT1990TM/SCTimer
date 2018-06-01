@@ -1,0 +1,11 @@
+<component name="libraryTable">
+  <library name="WCAScrambleGenerator">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/../WCAScrambleGenerator/out/artifacts/WCAScrambleGenerator_jar/WCAScrambleGenerator.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="jar://$PROJECT_DIR$/../WCAScrambleGenerator/out/artifacts/WCAScrambleGenerator_jar/WCAScrambleGenerator.jar!/" />
+    </SOURCES>
+  </library>
+</component>

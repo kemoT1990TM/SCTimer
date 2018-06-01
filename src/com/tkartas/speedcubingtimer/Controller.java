@@ -3,15 +3,21 @@ package com.tkartas.speedcubingtimer;
 import com.tkartas.generatescramble.GenerateScramble;
 import javafx.animation.AnimationTimer;
 import javafx.application.Platform;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableArray;
+import javafx.collections.ObservableList;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
+import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
+import net.gnehzr.tnoodle.scrambles.Puzzle;
 
 import java.text.*;
+import java.util.ArrayList;
 
 
 public class Controller {
@@ -22,13 +28,14 @@ public class Controller {
     @FXML
     private Label scrambleLabel;
     @FXML
-    private Label timesLabel;
-    @FXML
     private TextArea timesArea;
     @FXML
     private Label analyzerLabel1, analyzerLabel2, analyzerLabel3, analyzerLabel4, analyzerLabel5, analyzerLabel6, analyzerLabel7, analyzerLabel8, analyzerLabel9;
     @FXML
     private Button plusTwoButton, deleteButton;
+    @FXML
+    private ChoiceBox puzzleChoice;
+
 
     private boolean running = false;
     private Analyzer timesList = new Analyzer();
@@ -88,16 +95,27 @@ public class Controller {
 
     @FXML
     private void initialize() {
-        scrambleLabel.setText(generateScramble());
+        puzzleChoice.getSelectionModel().select("3x3x3");
+        scrambleLabel.setText(generateScramble(choicePuzzle()));
         plusTwoButton.setDisable(true);
         deleteButton.setDisable(true);
 //        startStopButton.setDisable(true);
 //        timesArea.setDisable(true);
     }
 
-    private String generateScramble() {
-        GenerateScramble scramble = new GenerateScramble(25);
-        return scramble.getScramble();
+    public void updateScrambleLabel(){
+        scrambleLabel.setText(generateScramble(choicePuzzle()));
+    }
+
+    private String generateScramble(int choice) {
+        ScrambleGenerator scramblePuzzle = new ScrambleGenerator(choice);
+        return scramblePuzzle.generateWcaScramble();
+    }
+
+    @FXML
+    private int choicePuzzle(){
+        String choice=puzzleChoice.getValue().toString();
+        return Integer.parseInt(choice.substring(0,1));
     }
 
     private void updateLabel(Label labelName, String text) {
@@ -114,9 +132,7 @@ public class Controller {
         updateLabel(analyzerLabel1, String.valueOf(timesList.getSize()));
         if (timesList.getSize() > 0) {
             updateLabel(analyzerLabel2, timesList.minTime());
-            System.out.println(timesList.minTime());
             updateLabel(analyzerLabel3, timesList.maxTime());
-            System.out.println(timesList.maxTime());
         } else {
             updateLabel(analyzerLabel2, "");
             updateLabel(analyzerLabel3, "");
@@ -168,7 +184,7 @@ public class Controller {
         if (running) {
             timer.stop();
             startStopButton.setText("START");
-            scrambleLabel.setText(generateScramble());
+            scrambleLabel.setText(generateScramble(choicePuzzle()));
             time = timerLabel.getText();
             timesList.addTime(time);
             timesArea.setText(timesList.printTimes());

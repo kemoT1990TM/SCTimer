@@ -7,7 +7,11 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class Analyzer {
-    private List<String> timesList=new LinkedList<>();
+    private List<String> timesList;
+
+    public Analyzer() {
+        this.timesList = new LinkedList<>();
+    }
 
     public void addTime(String time){
         timesList.add(time);

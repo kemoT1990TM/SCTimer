@@ -10,18 +10,42 @@
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.control.MenuBar?>
 <?import javafx.scene.control.TextArea?>
+<?import javafx.scene.control.ChoiceBox?>
+<?import com.sun.tools.javac.jvm.Items?>
+<?import javafx.collections.FXCollections?>
+<?import java.lang.String?>
 <BorderPane xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8.0.121"
             fx:controller="com.tkartas.speedcubingtimer.Controller">
     <top>
-        <Label/>
+        <HBox>
+        <Label text="  Puzzle Type: ">
+            <font>
+                <Font name="Calibri" size="18"/>
+            </font>
+        </Label>
+            <ChoiceBox fx:id="puzzleChoice" onAction="#updateScrambleLabel">
+                <items>
+                    <FXCollections fx:id="puzzleType" fx:factory="observableArrayList">
+                        <String fx:value="2x2x2"/>
+                        <String fx:value="3x3x3"/>
+                        <String fx:value="4x4x4"/>
+                        <String fx:value="5x5x5"/>
+                        <String fx:value="6x6x6"/>
+                        <String fx:value="7x7x7"/>
+                    </FXCollections>
+                </items>
+            </ChoiceBox>
+        </HBox>
     </top>
     <!--<left>-->
     <!--<Label minWidth="20"/>-->
     <!--</left>-->
     <center>
-        <VBox minWidth="600">
-            <Label fx:id="scrambleLabel" contentDisplay="CENTER" BorderPane.alignment="TOP_CENTER"
-                   textAlignment="CENTER" alignment="CENTER" minWidth="600" wrapText="true">
+        <VBox minWidth="620" BorderPane.alignment="CENTER">
+            <Label/>
+            <Label fx:id="scrambleLabel" contentDisplay="CENTER" BorderPane.alignment="CENTER"
+                   textAlignment="CENTER" alignment="CENTER" minWidth="600" wrapText="true" maxWidth="600"
+            minHeight="90">
                 <font>
                     <Font name="Calibri bold" size="20"/>
                 </font>
