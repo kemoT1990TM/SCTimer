@@ -14,9 +14,18 @@
 <?import com.sun.tools.javac.jvm.Items?>
 <?import javafx.collections.FXCollections?>
 <?import java.lang.String?>
+<?import javafx.scene.layout.Pane?>
 <BorderPane fx:id="mainSCTimerPane" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8.0.121"
             fx:controller="com.tkartas.speedcubingtimer.Controller">
     <top>
+        <VBox>
+        <Pane>
+            <HBox>
+            <Button text="Store Data" onAction="#storeData"/>
+            <Button text="Reset session" onAction="#resetSession"/>
+            <Button text="Show Scrambles" onAction="#showScramblesDialog"/>
+            </HBox>
+        </Pane>
         <HBox>
         <Label text="  Puzzle Type: ">
             <font>
@@ -35,9 +44,8 @@
                     </FXCollections>
                 </items>
             </ChoiceBox>
-            <Button text="Show Scrambles" onAction="#showScramblesDialog"/>
-            <Button text="Store Data" onAction="#storeData"/>
         </HBox>
+        </VBox>
     </top>
     <left>
     <Label minWidth="10"/>
@@ -53,7 +61,7 @@
                 </font>
             </Label>
             <Label/>
-            <Label fx:id="timerLabel" text="0.0" contentDisplay="CENTER" alignment="CENTER" prefWidth="600">
+            <Label fx:id="timerLabel" text="0.00" contentDisplay="CENTER" alignment="CENTER" prefWidth="600">
                 <font>
                     <Font name="Calibri bold" size="70"/>
                 </font>

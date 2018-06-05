@@ -2,7 +2,8 @@ package com.tkartas.speedcubingtimer;
 
 import com.tkartas.speedcubingtimer.datamodel.ScrambleGenerator;
 import com.tkartas.speedcubingtimer.datamodel.Scrambles;
-import com.tkartas.speedcubingtimer.datamodel.TimesAnalyzer;
+import com.tkartas.speedcubingtimer.datamodel.ScramblesAndTimes;
+import com.tkartas.speedcubingtimer.datamodel.Times;
 import javafx.animation.AnimationTimer;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -15,7 +16,6 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.text.*;
-import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
@@ -40,14 +40,9 @@ public class Controller {
     @FXML
     private BorderPane mainSCTimerPane;
 
+    private ScramblesAndTimes scramblesAndTimes=new ScramblesAndTimes("SCTimer");
 
     private boolean running = false;
-    private TimesAnalyzer timesList = new TimesAnalyzer();
-    private Scrambles scrambles = new Scrambles();
-
-    public static String minScramble="Not enough times";
-    public static String avg5Scrambles="Not enough times";
-    public static String avg12Scrambles="Not enough times";
 
     private AnimationTimer timer = new AnimationTimer() {
         private long startTime;
@@ -106,11 +101,9 @@ public class Controller {
     @FXML
     private void initialize() {
         puzzleChoice.getSelectionModel().select("3x3x3");
-        scrambleLabel.setText(generateScramble(choicePuzzle()));
+        scrambleLabel.setText(generateScramble(choosePuzzle()));
         plusTwoButton.setDisable(true);
         deleteButton.setDisable(true);
-//        startStopButton.setDisable(true);
-//        timesArea.setDisable(true);
     }
 
     @FXML
@@ -128,21 +121,13 @@ public class Controller {
             e.printStackTrace();
             return;
         }
-//        dialog.getDialogPane().getButtonTypes().add(ButtonType.OK);
         dialog.getDialogPane().getButtonTypes().add(ButtonType.CANCEL);
-
         Optional<ButtonType> result = dialog.showAndWait();
-//        if (result.isPresent() && result.get() == ButtonType.OK) {
-//            DialogController controller = fxmlLoader.getController();
-//            ToDoItem newItem = controller.processResults();
-////            todoListView.getItems().setAll(ToDoData.getInstance().getTodoItems()); after changing List to ObservableList
-//            todoListView.getSelectionModel().select(newItem);
-//        }
     }
 
 
     public void updateScrambleLabel() {
-        scrambleLabel.setText(generateScramble(choicePuzzle()));
+        scrambleLabel.setText(generateScramble(choosePuzzle()));
     }
 
     private String generateScramble(int choice) {
@@ -151,11 +136,12 @@ public class Controller {
     }
 
     @FXML
-    private int choicePuzzle() {
+    private int choosePuzzle() {
         String choice = puzzleChoice.getValue().toString();
         return Integer.parseInt(choice.substring(0, 1));
     }
 
+    @FXML
     private void updateLabel(Label labelName, String text) {
         String[] textFromLabel = labelName.getText().split(": ");
         StringBuilder sb = new StringBuilder();
@@ -165,36 +151,36 @@ public class Controller {
         labelName.setText(sb.toString());
     }
 
+    @FXML
     private void updateAnalyzer() {
-
-        updateLabel(analyzerLabel1, String.valueOf(timesList.getSize()));
-        if (timesList.getSize() > 0) {
-            updateLabel(analyzerLabel2, timesList.minTime());
-            updateLabel(analyzerLabel3, timesList.maxTime());
-            updateMinScramble();
+        updateLabel(analyzerLabel1, String.valueOf(scramblesAndTimes.getSizeOfTimes()));
+        scramblesAndTimes.updateMinScramble();
+        scramblesAndTimes.updateAvg5Scrambles();
+        scramblesAndTimes.updateAvg12Scrambles();
+        if (scramblesAndTimes.getSizeOfTimes() > 0) {
+            updateLabel(analyzerLabel2, scramblesAndTimes.minTime());
+            updateLabel(analyzerLabel3, scramblesAndTimes.maxTime());
         } else {
             updateLabel(analyzerLabel2, "");
             updateLabel(analyzerLabel3, "");
         }
-        if (timesList.getSize() >= 5) {
-            updateLabel(analyzerLabel4, timesList.currentAvg5());
-            updateLabel(analyzerLabel5, timesList.bestAvg5());
-            updateAvg5Scrambles();
+        if (scramblesAndTimes.getSizeOfTimes() >= 5) {
+            updateLabel(analyzerLabel4, scramblesAndTimes.currentAvg5());
+            updateLabel(analyzerLabel5, scramblesAndTimes.bestAvg5());
         } else {
             updateLabel(analyzerLabel4, "");
             updateLabel(analyzerLabel5, "");
         }
-        if (timesList.getSize() >= 12) {
-            updateLabel(analyzerLabel6, timesList.currentAvg12());
-            updateLabel(analyzerLabel7, timesList.bestAvg12());
-            updateAvg12Scrambles();
+        if (scramblesAndTimes.getSizeOfTimes() >= 12) {
+            updateLabel(analyzerLabel6, scramblesAndTimes.currentAvg12());
+            updateLabel(analyzerLabel7, scramblesAndTimes.bestAvg12());
         } else {
             updateLabel(analyzerLabel6, "");
             updateLabel(analyzerLabel7, "");
         }
-        if (timesList.getSize() >= 100) {
-            updateLabel(analyzerLabel8, timesList.currentAvg100());
-            updateLabel(analyzerLabel9, timesList.bestAvg100());
+        if (scramblesAndTimes.getSizeOfTimes() >= 100) {
+            updateLabel(analyzerLabel8, scramblesAndTimes.currentAvg100());
+            updateLabel(analyzerLabel9, scramblesAndTimes.bestAvg100());
         } else {
             updateLabel(analyzerLabel8, "");
             updateLabel(analyzerLabel9, "");
@@ -204,10 +190,10 @@ public class Controller {
     @FXML
     private void deleteButtonAction() {
 
-        if (timesList.getSize() <= 0) {
+        if (scramblesAndTimes.getSizeOfTimes() <= 0) {
         } else {
-            timesList.deleteLastTime();
-            timesArea.setText(timesList.printTimes());
+            scramblesAndTimes.deleteLastTime();
+            timesArea.setText(scramblesAndTimes.printTimes());
             updateAnalyzer();
             deleteButton.setDisable(true);
         }
@@ -215,15 +201,15 @@ public class Controller {
 
     @FXML
     private void plusTwoButtonAction() {
-        timesList.plusTwo();
-        timesArea.setText(timesList.printTimes());
+        scramblesAndTimes.plusTwo();
+        timesArea.setText(scramblesAndTimes.printTimes());
         updateAnalyzer();
         plusTwoButton.setDisable(true);
     }
 
     @FXML
     private void generateScrButtonAction() {
-        scrambleLabel.setText(generateScramble(choicePuzzle()));
+        scrambleLabel.setText(generateScramble(choosePuzzle()));
     }
 
     @FXML
@@ -234,11 +220,10 @@ public class Controller {
             scramble = scrambleLabel.getText();
             timer.stop();
             startStopButton.setText("START");
-            scrambleLabel.setText(generateScramble(choicePuzzle()));
+            scrambleLabel.setText(generateScramble(choosePuzzle()));
             time = timerLabel.getText();
-            timesList.addTime(time);
-            scrambles.addRecord(scramble);
-            timesArea.setText(timesList.printTimes());
+            scramblesAndTimes.addRecord(scramble,time);
+            timesArea.setText(scramblesAndTimes.printTimes());
             updateAnalyzer();
             plusTwoButton.setDisable(false);
             deleteButton.setDisable(false);
@@ -256,115 +241,26 @@ public class Controller {
         Optional<ButtonType> result = alert.showAndWait();
 
         if ((result.isPresent()) && (result.get()) == ButtonType.OK) {
-            SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd_HHmmss");
-            Date resultDate = new Date(System.currentTimeMillis());
-            String filename = "SCTimerResults" + sdf.format(resultDate) + ".txt";
-            Path path = Paths.get(filename);
-            BufferedWriter bw = Files.newBufferedWriter(path);
-            int[] positions = new int[timesList.getSize()];
-            for (int i = 0; i < timesList.getSize(); i++) {
-                positions[i] = i;
-            }
-            try {
-                for (int position : positions) {
-                    bw.write(String.format("%d\t%s\t%s",
-                            position,
-                            timesList.getTime(position),
-                            scrambles.getScrambleForPosition(position)));
-                    bw.newLine();
-                }
-            } finally {
-                if (bw != null) {
-                    bw.close();
-                }
-            }
+            scramblesAndTimes.storeScramblesAndTImes();
         }
     }
 
-    private String getTimeForScramble(String scramble) {
-        return timesList.getTime(scrambles.getPositionForScramble(scramble));
-    }
-
-    private String getScrambleForTime(String time) {
-        return scrambles.getScrambleForPosition(timesList.getPosition(time));
-    }
-
-    private String printScrambleForPosition(String positionList) {
-        String[] positions = positionList.split(",");
-        int intPosition=0;
-        for (String position : positions) {
-            intPosition=Integer.parseInt(position);
+    @FXML
+    public void resetSession(){
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setTitle("Resetting session");
+        alert.setHeaderText("Your session is going to be reset! All times and scrambles will be gone!");
+        alert.setContentText("Are you sure? Press OK to confirm, or cancel to back out.");
+        Optional<ButtonType> result = alert.showAndWait();
+        if ((result.isPresent()) && (result.get()) == ButtonType.OK) {
+            scramblesAndTimes=new ScramblesAndTimes("SCTimer");
+            updateAnalyzer();
+            timesArea.setText(scramblesAndTimes.printTimes());
+            plusTwoButton.setDisable(false);
+            deleteButton.setDisable(false);
+            timerLabel.setText("0.00");
         }
-        return scrambles.getScrambleForPosition(intPosition);
     }
 
-    private String printScrambles(String avgPositions) {
-        int i = 1;
-        String[] positions = avgPositions.split(",");
-        List<String> scrambleList = new LinkedList<>();
-        TimesAnalyzer smallTimesList = new TimesAnalyzer();
-        for (String position : positions){
-            smallTimesList.addTime(timesList.getTime(Integer.parseInt(position)));
-        }
-        String min=smallTimesList.minTime();
-        String max=smallTimesList.maxTime();
-        for (String position : positions) {
-            StringBuilder sb = new StringBuilder();
-            sb.append(i);
-            sb.append(". ");
-            if(timesList.getTime(Integer.parseInt(position)).equals(min) || timesList.getTime(Integer.parseInt(position)).equals(max)){
-                sb.append("(");
-            }
-            sb.append(timesList.getTime(Integer.parseInt(position)));
-            if(timesList.getTime(Integer.parseInt(position)).equals(min) || timesList.getTime(Integer.parseInt(position)).equals(max)){
-                sb.append(")");
-            }
-            sb.append(" : ");
-            sb.append(scrambles.getScrambleForPosition(Integer.parseInt(position)));
-            scrambleList.add(sb.toString());
-            i = i + 1;
-        }
-        StringBuilder scrambleBuilder = new StringBuilder();
-        for (String scramble : scrambleList) {
-            scrambleBuilder.append(scramble);
-            scrambleBuilder.append("\n");
-        }
-        return scrambleBuilder.toString();
-    }
-
-    private void updateMinScramble() {
-        StringBuilder sb = new StringBuilder();
-        sb.append("Generated by SCTimer");
-        sb.append("\n");
-        sb.append("Best single time: ");
-        sb.append(timesList.minTime());
-        sb.append("\n");
-        sb.append(timesList.minTime());
-        sb.append(" : ");
-        sb.append(printScrambleForPosition(timesList.getMinPosition()));
-        minScramble=sb.toString();
-    }
-
-    private void updateAvg5Scrambles() {
-        StringBuilder sb = new StringBuilder();
-        sb.append("Generated by SCTimer");
-        sb.append("\n");
-        sb.append("Best average of 5 times: ");
-        sb.append(timesList.bestAvg5());
-        sb.append("\n");
-        sb.append(printScrambles(timesList.getBestAvg5Positions()));
-        avg5Scrambles=sb.toString();
-    }
-
-    private void updateAvg12Scrambles() {
-        StringBuilder sb = new StringBuilder();
-        sb.append("Generated by SCTimer");
-        sb.append("\n");
-        sb.append("Best average of 12 times: ");
-        sb.append(timesList.bestAvg12());
-        sb.append("\n");
-        sb.append(printScrambles(timesList.getBestAvg12Positions()));
-        avg12Scrambles=sb.toString();
-    }
 }
 

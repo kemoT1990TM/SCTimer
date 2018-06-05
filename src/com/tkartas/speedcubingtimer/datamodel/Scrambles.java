@@ -3,41 +3,34 @@ package com.tkartas.speedcubingtimer.datamodel;
 import java.util.*;
 
 public class Scrambles {
-    private int position=0;
-    private String scramble;
-    private Map<Integer,String> scrambles;
+    private List<String> scrambles;
 
     public Scrambles() {
-        scrambles=new LinkedHashMap<>();
+        scrambles=new LinkedList<>();
     }
 
-    public void addRecord(String scramble){
-        scrambles.put(position,scramble);
-        position++;
+    public void addScramble(String scramble){
+        scrambles.add(scramble);
     }
 
-    public TimesAnalyzer getAllTimes() {
-        TimesAnalyzer times=new TimesAnalyzer();
-        for(String time:scrambles.values()){
-            times.addTime(time);
-        }
-        return times;
+    public List<String> getScrambles() {
+        return scrambles;
     }
 
-    public String getScrambleForPosition(int positio){
-            return scrambles.get(positio);
+    public void setScrambles(List<String> scrambles) {
+        this.scrambles = scrambles;
+    }
+
+
+    public int getSize(){
+        return scrambles.size();
+    }
+
+    public String getScramble(int position){
+            return scrambles.get(position);
     }
 
     public int getPositionForScramble(String scramble) {
-        for(Integer position:scrambles.keySet()){
-            if(scrambles.get(position).equals(scramble)){
-                return position;
-            }
-        }
-        return -1;
-    }
-
-    public void setScramble(String scramble) {
-        this.scramble = scramble;
+        return scramble.indexOf(scramble);
     }
 }
