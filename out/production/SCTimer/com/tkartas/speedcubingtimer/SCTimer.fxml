@@ -14,7 +14,7 @@
 <?import com.sun.tools.javac.jvm.Items?>
 <?import javafx.collections.FXCollections?>
 <?import java.lang.String?>
-<BorderPane xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8.0.121"
+<BorderPane fx:id="mainSCTimerPane" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8.0.121"
             fx:controller="com.tkartas.speedcubingtimer.Controller">
     <top>
         <HBox>
@@ -35,11 +35,13 @@
                     </FXCollections>
                 </items>
             </ChoiceBox>
+            <Button text="Show Scrambles" onAction="#showScramblesDialog"/>
+            <Button text="Store Data" onAction="#storeData"/>
         </HBox>
     </top>
-    <!--<left>-->
-    <!--<Label minWidth="20"/>-->
-    <!--</left>-->
+    <left>
+    <Label minWidth="10"/>
+    </left>
     <center>
         <VBox minWidth="620" BorderPane.alignment="CENTER">
             <Label/>
@@ -64,7 +66,8 @@
                     <!--<Label prefWidth="100"/>-->
                     <Button fx:id="plusTwoButton" prefWidth="100" text="+2" alignment="CENTER" BorderPane.alignment="CENTER"
                     onAction="#plusTwoButtonAction"/>
-                    <!--<Button fx:id="dnfButton" prefWidth="90" text="DNF" alignment="CENTER" BorderPane.alignment="CENTER"/>-->
+                    <Button fx:id="generateScrButton" prefWidth="100" text="New Scramble" alignment="CENTER" BorderPane.alignment="CENTER"
+                    onAction="#generateScrButtonAction"/>
                 </HBox>
                 <Label/>
                 <Button fx:id="startStopButton" prefHeight="25.0" prefWidth="300.0" text="START" focusTraversable="true"
