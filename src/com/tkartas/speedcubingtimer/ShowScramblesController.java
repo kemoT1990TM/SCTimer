@@ -12,6 +12,11 @@ public class ShowScramblesController{
     private ChoiceBox scrambleChoice;
 
     @FXML
+    public void initialize(){
+        scrambleChoice.getSelectionModel().select("Best single time");
+    }
+
+    @FXML
     public void scrambleChoiceAction() {
         String choice = scrambleChoice.getValue().toString();
         switch (choice) {

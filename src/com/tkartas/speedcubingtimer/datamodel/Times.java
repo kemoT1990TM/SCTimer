@@ -113,11 +113,11 @@ public class Times {
 
 
     public String minTime(){
-        List<Long> newtimesList=new LinkedList<>();
+        List<Long> newTimesList=new LinkedList<>();
         for(String time:timesList){
-            newtimesList.add(convertStringToMillis(time));
+            newTimesList.add(convertStringToMillis(time));
         }
-        Long result=Collections.min(newtimesList);
+        Long result=Collections.min(newTimesList);
         MIN_POSITION=Integer.toString(timesList.indexOf(convertToDateFormat(result)));
         return convertToDateFormat(result);
     }
@@ -145,12 +145,14 @@ public class Times {
             fiveList.add(convertStringToMillis(timesList.get(i-1)));
         }
         Long sum=0L;
-        fiveList.remove(Collections.min(fiveList));
-        fiveList.remove(Collections.max(fiveList));
+        long minEl= fiveList.stream().filter(x->x<=Collections.min(fiveList)).findFirst().get();
+        long maxEl= fiveList.stream().filter(x->x>=Collections.max(fiveList)).findFirst().get();
+        fiveList.remove(minEl);
+        fiveList.remove(maxEl);
         for(int i=0;i<fiveList.size();i++){
             sum+=fiveList.get(i);
         }
-        Long result=sum/3;
+        Long result=sum/fiveList.size();
         return convertToDateFormat(result);
     }
 
@@ -164,17 +166,19 @@ public class Times {
     }
 
     public String currentAvg12(){
-        List<Long> fiveList=new LinkedList<>();
+        List<Long> twelveList=new LinkedList<>();
         for(int i=this.timesList.size()-11;i<=this.timesList.size();i=i+1){
-            fiveList.add(convertStringToMillis(timesList.get(i-1)));
+            twelveList.add(convertStringToMillis(timesList.get(i-1)));
         }
         Long sum=0L;
-        fiveList.remove(Collections.min(fiveList));
-        fiveList.remove(Collections.max(fiveList));
-        for(int i=0;i<fiveList.size();i++){
-            sum+=fiveList.get(i);
+        long minEl= twelveList.stream().filter(x->x<=Collections.min(twelveList)).findFirst().get();
+        long maxEl= twelveList.stream().filter(x->x>=Collections.max(twelveList)).findFirst().get();
+        twelveList.remove(minEl);
+        twelveList.remove(maxEl);
+        for(int i=0;i<twelveList.size();i++){
+            sum+=twelveList.get(i);
         }
-        Long result=sum/10;
+        Long result=sum/twelveList.size();
         return convertToDateFormat(result);
     }
 
@@ -187,17 +191,19 @@ public class Times {
     }
 
     public String currentAvg100(){
-        List<Long> fiveList=new LinkedList<>();
+        List<Long> hundredList=new LinkedList<>();
         for(int i=this.timesList.size()-99;i<=this.timesList.size();i=i+1){
-            fiveList.add(convertStringToMillis(timesList.get(i-1)));
+            hundredList.add(convertStringToMillis(timesList.get(i-1)));
         }
         Long sum=0L;
-        fiveList.remove(Collections.min(fiveList));
-        fiveList.remove(Collections.max(fiveList));
-        for(int i=0;i<fiveList.size();i++){
-            sum+=fiveList.get(i);
+        long minEl= hundredList.stream().filter(x->x<=Collections.min(hundredList)).findFirst().get();
+        long maxEl= hundredList.stream().filter(x->x>=Collections.max(hundredList)).findFirst().get();
+        hundredList.remove(minEl);
+        hundredList.remove(maxEl);
+        for(int i=0;i<hundredList.size();i++){
+            sum+=hundredList.get(i);
         }
-        Long result=sum/98;
+        Long result=sum/hundredList.size();
         return convertToDateFormat(result);
     }
 
@@ -308,13 +314,15 @@ public class Times {
             sb.append(',');
         }
         Long sum=0L;
-        fiveList.remove(Collections.min(fiveList));
-        fiveList.remove(Collections.max(fiveList));
+        long minEl= fiveList.stream().filter(x->x<=Collections.min(fiveList)).findFirst().get();
+        long maxEl= fiveList.stream().filter(x->x>=Collections.max(fiveList)).findFirst().get();
+        fiveList.remove(minEl);
+        fiveList.remove(maxEl);
         for(int i=0;i<fiveList.size();i++){
             sum+=fiveList.get(i);
         }
         mapCountAvg5.put((sum/3),sb.toString());
-        return sum/3;
+        return sum/fiveList.size();
     }
 
     private Long countAvg12(int indexNumber){
@@ -326,13 +334,15 @@ public class Times {
             sb.append(',');
         }
         Long sum=0L;
-        twelveList.remove(Collections.min(twelveList));
-        twelveList.remove(Collections.max(twelveList));
+        long minEl= twelveList.stream().filter(x->x<=Collections.min(twelveList)).findFirst().get();
+        long maxEl= twelveList.stream().filter(x->x>=Collections.max(twelveList)).findFirst().get();
+        twelveList.remove(minEl);
+        twelveList.remove(maxEl);
         for(int i=0;i<twelveList.size();i++){
             sum+=twelveList.get(i);
         }
         mapCountAvg12.put((sum/10),sb.toString());
-        return sum/10;
+        return sum/twelveList.size();
     }
 
     private Long countAvg100(Integer indexNumber){
@@ -341,12 +351,14 @@ public class Times {
             hundredList.add(convertStringToMillis(timesList.get(i)));
         }
         Long sum=0L;
-        hundredList.remove(Collections.min(hundredList));
-        hundredList.remove(Collections.max(hundredList));
+        long minEl= hundredList.stream().filter(x->x<=Collections.min(hundredList)).findFirst().get();
+        long maxEl= hundredList.stream().filter(x->x>=Collections.max(hundredList)).findFirst().get();
+        hundredList.remove(minEl);
+        hundredList.remove(maxEl);
         for(int i=0;i<hundredList.size();i++){
             sum+=hundredList.get(i);
         }
-        return sum/98;
+        return sum/hundredList.size();
     }
 
 }

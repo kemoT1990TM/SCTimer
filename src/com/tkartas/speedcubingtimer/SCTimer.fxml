@@ -23,7 +23,7 @@
             <HBox>
             <Button text="Store Data" onAction="#storeData"/>
             <Button text="Reset session" onAction="#resetSession"/>
-            <Button text="Show Scrambles" onAction="#showScramblesDialog"/>
+            <Button text="Show best avgs" onAction="#showScramblesDialog"/>
             </HBox>
         </Pane>
         <HBox>
@@ -32,7 +32,7 @@
                 <Font name="Calibri" size="18"/>
             </font>
         </Label>
-            <ChoiceBox fx:id="puzzleChoice" onAction="#updateScrambleLabel">
+            <ChoiceBox fx:id="puzzleChoice" onAction="#updateScrambleLabelAfterPuzzleChoice">
                 <items>
                     <FXCollections fx:id="puzzleType" fx:factory="observableArrayList">
                         <String fx:value="2x2x2"/>

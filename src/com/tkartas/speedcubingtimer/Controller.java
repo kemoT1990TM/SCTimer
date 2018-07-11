@@ -1,25 +1,17 @@
 package com.tkartas.speedcubingtimer;
 
-import com.tkartas.speedcubingtimer.datamodel.ScrambleGenerator;
-import com.tkartas.speedcubingtimer.datamodel.Scrambles;
-import com.tkartas.speedcubingtimer.datamodel.ScramblesAndTimes;
-import com.tkartas.speedcubingtimer.datamodel.Times;
+import com.tkartas.speedcubingtimer.datamodel.*;
 import javafx.animation.AnimationTimer;
+import javafx.beans.value.ObservableValue;
+import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.*;
 import javafx.scene.layout.BorderPane;
 
-import java.io.BufferedWriter;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.text.*;
-import java.util.Date;
-import java.util.LinkedList;
-import java.util.List;
 import java.util.Optional;
+
 
 
 public class Controller {
@@ -44,15 +36,19 @@ public class Controller {
 
     private boolean running = false;
 
+    private TimeFormatter formatter=new TimeFormatter();
+
+
+
     private AnimationTimer timer = new AnimationTimer() {
         private long startTime;
-        private double time = 0;
+        private long time = 0;
 
         @Override
         public void start() {
             super.start();
+            running=true;
             startTime = System.currentTimeMillis();
-            running = true;
         }
 
         @Override
@@ -61,22 +57,15 @@ public class Controller {
             running = false;
         }
 
+
+
         @Override
         public void handle(long now) {
-            DateFormat df = new SimpleDateFormat("s.SS");
+            String elapsedTime;
             long newTime = System.currentTimeMillis();
             time = newTime - startTime;
-            double timeDev = time / 1000;
-            if (timeDev >= 10 && timeDev < 60) {
-                df = new SimpleDateFormat("ss.SS");
-            } else if (timeDev >= 60 && timeDev < 600) {
-                df = new SimpleDateFormat("m:ss.SS");
-            } else if (timeDev >= 600 && timeDev < 3600) {
-                df = new SimpleDateFormat("mm:ss.SS");
-            } else if (timeDev > 3600) {
-                df = new SimpleDateFormat("HH:mm:ss.SS");
-            }
-            timerLabel.setText(df.format(time));
+            elapsedTime=formatter.cutLastMilli(formatter.convertToDateFormat(time));
+            timerLabel.setText(elapsedTime);
         }
     };
 
@@ -101,7 +90,7 @@ public class Controller {
     @FXML
     private void initialize() {
         puzzleChoice.getSelectionModel().select("3x3x3");
-        scrambleLabel.setText(generateScramble(choosePuzzle()));
+        updateScrambleLabel(choosePuzzle());
         plusTwoButton.setDisable(true);
         deleteButton.setDisable(true);
     }
@@ -125,14 +114,25 @@ public class Controller {
         Optional<ButtonType> result = dialog.showAndWait();
     }
 
+//    private String generateScramble(int choice) {
+//        ScrambleGenerator scramblePuzzle = new ScrambleGenerator(choice);
+//        return scramblePuzzle.generateWcaScramble();
+//    }
 
-    public void updateScrambleLabel() {
-        scrambleLabel.setText(generateScramble(choosePuzzle()));
+    public void updateScrambleLabel(int choice) {
+       final ScrambleGenerator scramblePuzzle = new ScrambleGenerator(choice);
+        Task<String> generateScrambleTask=new Task<String>() {
+            @Override
+            protected String call() throws Exception {
+                return scramblePuzzle.generateWcaScramble();
+            }
+        };
+        new Thread(generateScrambleTask).start();
+        scrambleLabel.textProperty().bind(generateScrambleTask.valueProperty());
     }
 
-    private String generateScramble(int choice) {
-        ScrambleGenerator scramblePuzzle = new ScrambleGenerator(choice);
-        return scramblePuzzle.generateWcaScramble();
+    public void updateScrambleLabelAfterPuzzleChoice(){
+        updateScrambleLabel(choosePuzzle());
     }
 
     @FXML
@@ -145,15 +145,39 @@ public class Controller {
     private void updateLabel(Label labelName, String text) {
         String[] textFromLabel = labelName.getText().split(": ");
         StringBuilder sb = new StringBuilder();
-        sb.append(textFromLabel[0]);
-        sb.append(": ");
-        sb.append(text);
-        labelName.setText(sb.toString());
+        Task<String> task= new Task<String>() {
+            @Override
+            protected String call() throws Exception {
+                sb.append(textFromLabel[0]);
+                sb.append(": ");
+                sb.append(text);
+                return sb.toString();
+            }
+        };
+        new Thread(task).start();
+        labelName.textProperty().bind(task.valueProperty());
     }
+
+    private void printTimes(){
+
+        Task<String> task=new Task<String>() {
+            @Override
+            protected String call() throws Exception {
+                return scramblesAndTimes.printTimes();
+            }
+        };
+        new Thread(task).start();
+        timesArea.textProperty().bind(task.valueProperty());
+}
+
 
     @FXML
     private void updateAnalyzer() {
         updateLabel(analyzerLabel1, String.valueOf(scramblesAndTimes.getSizeOfTimes()));
+        if (scramblesAndTimes.getSizeOfTimes() <= 0) {
+            deleteButton.setDisable(true);
+            plusTwoButton.setDisable(true);
+        }
         scramblesAndTimes.updateMinScramble();
         scramblesAndTimes.updateAvg5Scrambles();
         scramblesAndTimes.updateAvg12Scrambles();
@@ -189,46 +213,44 @@ public class Controller {
 
     @FXML
     private void deleteButtonAction() {
-
         if (scramblesAndTimes.getSizeOfTimes() <= 0) {
+            deleteButton.setDisable(true);
+            plusTwoButton.setDisable(true);
         } else {
             scramblesAndTimes.deleteLastTime();
-            timesArea.setText(scramblesAndTimes.printTimes());
+            printTimes();
             updateAnalyzer();
-            deleteButton.setDisable(true);
         }
     }
 
     @FXML
     private void plusTwoButtonAction() {
         scramblesAndTimes.plusTwo();
-        timesArea.setText(scramblesAndTimes.printTimes());
+        printTimes();
         updateAnalyzer();
         plusTwoButton.setDisable(true);
     }
 
     @FXML
     private void generateScrButtonAction() {
-        scrambleLabel.setText(generateScramble(choosePuzzle()));
+        updateScrambleLabel(choosePuzzle());
     }
 
     @FXML
     private void startStopTimer() {
-        String time;
-        String scramble;
         if (running) {
-            scramble = scrambleLabel.getText();
             timer.stop();
-            startStopButton.setText("START");
-            scrambleLabel.setText(generateScramble(choosePuzzle()));
-            time = timerLabel.getText();
-            scramblesAndTimes.addRecord(scramble,time);
-            timesArea.setText(scramblesAndTimes.printTimes());
-            updateAnalyzer();
             plusTwoButton.setDisable(false);
             deleteButton.setDisable(false);
+            startStopButton.setText("START");
+            scramblesAndTimes.addRecord(scrambleLabel.getText(),timerLabel.getText());
+            printTimes();
+            updateAnalyzer();
+            updateScrambleLabel(choosePuzzle());
         } else {
             timer.start();
+            plusTwoButton.setDisable(true);
+            deleteButton.setDisable(true);
             startStopButton.setText("STOP");
         }
     }
@@ -255,9 +277,9 @@ public class Controller {
         if ((result.isPresent()) && (result.get()) == ButtonType.OK) {
             scramblesAndTimes=new ScramblesAndTimes("SCTimer");
             updateAnalyzer();
-            timesArea.setText(scramblesAndTimes.printTimes());
-            plusTwoButton.setDisable(false);
-            deleteButton.setDisable(false);
+            printTimes();
+            plusTwoButton.setDisable(true);
+            deleteButton.setDisable(true);
             timerLabel.setText("0.00");
         }
     }
