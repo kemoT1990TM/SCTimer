@@ -1,7 +1,8 @@
 # SCTimer
 Desktop Speedcubing Timer in Java.
-For a time being it is using simple Scramble Generator but it will be develoed or changed later.
-Changed UI completly. Added Delete button funcinality.
-Analyzer is working good but operating on Double values and this needs to be changed to working with DateTime values which is milestone.
-After above +2 button funcinality will be added.
+Using WCA Scramble Generator.
+Calculation of avarages is working as expected.
+Added options: Storing data in txt file, Resetting session, Showing times and scrambles for best averages dialog.
+Used thread binding.
+Several corrections will be implemented soon: label adjusting to 6x6 and 7x7 scrambles needs to be corrected in a first place.
 Storing averages in DB and times in files will be added later.
