@@ -2,11 +2,17 @@ package com.tkartas.speedcubingtimer;
 
 import com.tkartas.speedcubingtimer.datamodel.*;
 import javafx.animation.AnimationTimer;
+import javafx.application.Platform;
 import javafx.beans.value.ObservableValue;
 import javafx.concurrent.Task;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.BorderPane;
 
 import java.io.IOException;
@@ -18,7 +24,7 @@ public class Controller {
     @FXML
     private Label timerLabel;
     @FXML
-    private Button startStopButton;
+    public Button startStopButton;
     @FXML
     private Label scrambleLabel;
     @FXML
@@ -69,6 +75,10 @@ public class Controller {
         }
     };
 
+
+
+
+
 //    @FXML
 //    private void handleKeyPressed(KeyEvent event) {
 //        System.out.println(event.getCode());
@@ -88,12 +98,18 @@ public class Controller {
 //    }
 
     @FXML
-    private void initialize() {
+    private void initialize() throws IOException {
         puzzleChoice.getSelectionModel().select("3x3x3");
         updateScrambleLabel(choosePuzzle());
         plusTwoButton.setDisable(true);
         deleteButton.setDisable(true);
-    }
+
+//        Platform.runLater(()->startStopButton.requestFocus());
+        }
+
+        public void focusButton(){
+            startStopButton.requestFocus();
+        }
 
     @FXML
     public void showScramblesDialog() {
@@ -237,7 +253,7 @@ public class Controller {
     }
 
     @FXML
-    private void startStopTimer() {
+    public void startStopTimer() {
         if (running) {
             timer.stop();
             plusTwoButton.setDisable(false);
